@@ -3,16 +3,13 @@
 <head>
 	<meta charset="utf-8">
 	<title>Probar el modelo</title>
-	<script src="./Modelo.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	<script src="./cliente/clienteRest.js"></script>
 </head>
 <body>
-	<h2>Probar el modelo</h2>
+	<p>probar el modelo</p>
 	<script>
-		miJuego=new Juego();
-		miJuego.agregarUsuario("pepe");
-		miJuego.agregarUsuario("luis");
-		user1=miJuego.usuarios["pepe"];
-		user2=miJuego.usuarios["luis"];
+		rest=new ClienteRest();
 	</script>
 </body>
 </html>
