@@ -9,12 +9,12 @@ function ClienteRest() {
             if (data.nick != -1) {
                 console.log("Usuario "+data.nick+" registrado");
                 cli.nick=data.nick;
-                //ws.nick = data.nick;
-                //$.cookie("nick",ws.nick);
-                //iu.mostrarHome(data);
+                nick=data.nick;
+                iu.mostrarHome(data.nick);
             }
             else {
                 console.log("No se ha podido registrar el usuario");
+                iu.mostrarAgregarUsuario();
                 //iu.mostrarModal("El nick ya está en uso");
                 //iu.mostrarAgregarJugador();
             }
