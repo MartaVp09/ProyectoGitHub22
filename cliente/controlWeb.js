@@ -1,17 +1,11 @@
 function ControlWeb() {
-    
+
     this.mostrarAgregarUsuario = function () {
         var cadena = '<div class="row" id="mAU">';
-        cadena = cadena + '<div class="row"><h2>El juego indefinido</h2></div>';
-        cadena = cadena + '<div class="row">';
-        cadena = cadena + '<div class="col">'
-        cadena = cadena + '<input type="text" class="form-control mb-2 mr-sm-2" id="usr" placeholder="Introduce tu nick (max 6 letras)" required></div>';
-        cadena = cadena + '<div class="col">';
+        cadena = cadena + '<h2>El juego indefinido</h2>';
+        cadena = cadena + '<input type="text" class="form-control mb-2 mr-sm-2" id="usr" placeholder="Introduce tu nick (max 6 letras)" required>';
         cadena = cadena + '<button id="btnAU" class="btn btn-primary mb-2 mr-sm-2">Iniciar sesión</button>';
-        //cadena=cadena+'<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Accede con Google</a>';
-
-        cadena = cadena + '</div>'; //' </form>';
-        cadena = cadena + '<div id="nota"></div></div></div>';
+        cadena = cadena + '<div id="nota"></div></div>';
 
         $("#agregarUsuario").append(cadena);
         //$("#nota").append("<div id='aviso' style='text-align:right'>Inicia sesión con Google para jugar</div>");    
@@ -37,15 +31,33 @@ function ControlWeb() {
         var cadena = "<div id='mH'><h2>Bienvenido ";
         cadena = cadena + usuario;
         cadena = cadena + "!</h2></div>";
+        cadena = cadena + "<div id=codigo></div>";
 
         $("#agregarUsuario").append(cadena);
+        this.mostrarCrearPartida();
 
     }
+
+    this.mostrarCodigo = function (codigo) {
+        var cadena = "Código de la partida: " + codigo;
+        $("#codigo").append(cadena);
+    }
+
     this.mostrarCrearPartida = function () {
         // Dibujar un botón, que al hacer click llame a crear
         // partida de rest
-        var usuario = rest.nick;
-        var cadena = '<button id="btnAU" class="btn btn-primary mb-2 mr-sm-2">Crear partida</button>';
+        $("#mCP").remove();
+        var cadena = '<div class="row" id="mCP">';
+        cadena = cadena + '<div class="col">'
+        cadena = cadena + '<button id="btnCP" class="btn btn-primary">Crear partida</button>';
+        cadena = cadena + '</div>';
+        cadena = cadena + '</div>';
+
+        $("#crearPartida").append(cadena);
+        $("#btnCP").on("click", function (e) {
+            $("#mCP").remove();
+            rest.crearPartida();
+        });
 
     }
 
@@ -53,6 +65,19 @@ function ControlWeb() {
         // Crear un control visual tipo lista para mostrar 
         // la lista de partidas
         // y permitir unirse
+        $("#mLDP").remove();
+        //var cadena = '<div class="row" id=mLDP>';
+        cadena = '<h2>Lista de partidas:</h2>';
+        cadena = cadena + '<ul class="list-group border-top" style="margin-top: 10px;">';
+
+        for (i = 0; i < lista.length; i++) {
+            cadena = cadena + '<li class="list-group-item">'+lista[i].codigo+' Propietario: '+lista[i].owner+'</li>';
+        }
+        
+        cadena = cadena + '</ul>';
+        cadena = cadena + '</div>';
+
+        $("#listaPartidas").append(cadena);
     }
 
 }
