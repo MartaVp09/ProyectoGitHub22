@@ -79,7 +79,7 @@ function ControlWeb(){
 		let cadena="<div id='mLP'>";		
 		cadena=cadena+'<ul class="list-group">';
 		for(i=0;i<lista.length;i++){
-		  cadena = cadena+'<li class="list-group-item">'+lista[i].codigo+' propietario: '+lista[i].owner+'</li>';
+		  cadena = cadena+'<p>Código de partida: '+lista[i].codigo+' Nick propietario: '+lista[i].owner+'</p>';
 		}
 		cadena=cadena+"</ul>";
 		cadena=cadena+"</div>"
@@ -94,7 +94,7 @@ function ControlWeb(){
 		
 		cadena=cadena+'<ul class="list-group">';
 		for(i=0;i<lista.length;i++){
-		  cadena = cadena+'<li class="list-group-item"><a href="#" value="'+lista[i].codigo+'"> Nick propietario: '+lista[i].owner+'</a></li>';
+		  cadena = cadena+'<p>Código de partida: '+lista[i].codigo+' Nick propietario: '+lista[i].owner+'</p>';
 		}
 		cadena=cadena+"</ul>";
 
