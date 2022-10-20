@@ -7,24 +7,6 @@ const PORT = process.env.PORT || 3000;
 
 let juego = new modelo.Juego();
 
-//HTTP GET POST PUT DELETE
-/*
-	get "/"
-	get "/obtenerPartidas"
-	post get "/agregarUsuario/:nick"
-	put "/actualizarPartida"
-	delete "/eliminarPartida"
-	"/..."
-*/
-
-/*
-app.get("/",(req,res) => {
-	res
-	  .status(200)
-	  .send("Hola")
-	  .end();
-});
-*/
 app.use(express.static(__dirname + "/"));
 
 app.get("/", function(request,response){
