@@ -1,15 +1,7 @@
 function ControlWeb(){
-	this.comprobarCookie=function(){
-		if ($.cookie("nick")){
-			rest.nick=$.cookie("nick");
-			this.mostrarHome();
-		}
-		else{
-			this.mostrarAgregarUsuario();
-		}
-	}
+	
 	this.mostrarAgregarUsuario=function(){
-		let cadena= '<div class="row" id="mAU">';//'<form class="form-row needs-validation"  id="mAJ">';
+		let cadena= '<div class="row" id="mAU">';
 		cadena=cadena+"<div class='col'>";
 		cadena=cadena+'<div class="row"><div class="col"><h2>El juego indefinido</h2></div></div>';
 		cadena=cadena+'<div class="row">';
@@ -21,8 +13,7 @@ function ControlWeb(){
         cadena=cadena+'<div id="nota"></div>';
         cadena=cadena+'</div></div></div>';
 
-		$("#agregarUsuario").append(cadena);     
-		//$("#nota").append("<div id='aviso' style='text-align:right'>Inicia sesión con Google para jugar</div>");    
+		$("#agregarUsuario").append(cadena);        
 
 		$("#btnAU").on("click",function(e){
 			if ($('#usr').val() === '' || $('#usr').val().length>6) {
@@ -32,7 +23,6 @@ function ControlWeb(){
 			else{
 				var nick=$('#usr').val();
 				$("#mAU").remove();
-				//$("#aviso").remove();
 				rest.agregarUsuario(nick);
 				//mostrar gif
 			}
@@ -42,7 +32,7 @@ function ControlWeb(){
 		$('#mH').remove();
 		let cadena="<div class='row' id='mH'>";
 		cadena=cadena+'<div class="col">';
-		cadena=cadena+"<h2>Bienvenido "+rest.nick+"</h2>";
+		cadena=cadena+"<h2>Bienvenido "+rest.nick+"!</h2>";
 		cadena=cadena+"<div id='codigo'></div>"
 		cadena=cadena+'<button id="btnSalir" class="btn btn-primary mb-2 mr-sm-2" style="margin-top:10px">Salir</button>';
 		cadena=cadena+"</div></div>";
@@ -55,6 +45,7 @@ function ControlWeb(){
 			$('#mH').remove();
 			$.removeCookie("nick");
 			iu.comprobarCookie();
+			rest.salir();
 		});
 	}
 	this.mostrarCrearPartida=function(){
@@ -114,6 +105,15 @@ function ControlWeb(){
 	    $("#btnAL").on("click",function(e){		
 			rest.obtenerListaPartidasDisponibles();
 		})
+	}
+	this.comprobarCookie=function(){
+		if ($.cookie("nick")){
+			rest.nick=$.cookie("nick");
+			this.mostrarHome();
+		}
+		else{
+			this.mostrarAgregarUsuario();
+		}
 	}
 	this.mostrarModal=function(msg){
 		$('#mM').remove();

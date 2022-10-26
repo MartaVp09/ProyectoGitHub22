@@ -8,9 +8,8 @@ function ClienteRest(){
 			if (data.nick!=-1){
 				console.log("Usuario "+data.nick+" registrado")
 				cli.nick=data.nick;
-				//ws.nick=data.nick;
 				$.cookie("nick",data.nick);
-				iu.mostrarHome();//iu.mostrarHome(data.nick)
+				iu.mostrarHome();
 			}
 			else{
 				console.log("No se ha podido registrar el usuario")
@@ -27,39 +26,41 @@ function ClienteRest(){
 			if (data.codigo!=-1){
 				console.log("Usuario "+nick+" crea partida codigo: "+data.codigo)
 				iu.mostrarCodigo(data.codigo);
-				//ws.nick=data.nick;
-				//$.cookie("nick",ws.nick);
-				//iu.mostrarHome(data);
 			}
 			else{
 				console.log("No se ha podido crear partida")
-				//iu.mostrarModal("El nick ya está en uso");
-				//iu.mostrarAgregarJugador();
 			}
 		});
 	}
 	this.unirseAPartida=function(codigo){
 		let cli=this;
-		$.getJSON("/unirseAPartida/"+cli.nick+"/"+codigo,function(data){
+		$.getJSON("/unirseAPartida/"+this.nick+"/"+codigo,function(data){
 			//se ejecuta cuando conteste el servidor
-			//console.log(data);
 			if (data.codigo!=-1){
 				console.log("Usuario "+cli.nick+" se une a partida codigo: "+data.codigo);
 				iu.mostrarCodigo(data.codigo);
-				//ws.nick=data.nick;
-				//$.cookie("nick",ws.nick);
-				//iu.mostrarHome(data);
 			}
 			else{
 				console.log("No se ha podido unir a partida")
-				//iu.mostrarModal("El nick ya está en uso");
-				//iu.mostrarAgregarJugador();
 			}
 		});
 	}
+
+	this.salir=function(){
+		let cli=this;
+		$.getJSON("/salir/"+cli.nick,function(data){
+			//se ejecuta cuando conteste el servidor
+			if(data.codigo!=1){
+				console.log("Partida "+data.codigo+" eliminada.");
+				console.log("El usuario "+cli.nick+" ha salido del juego.")
+			}else{
+				console.log("No existe partida creada por "+cli.nick);
+			}
+		});
+	}
+
 	this.obtenerListaPartidas=function(){
 		let cli=this;
-		//obtenerPartidasDisponibles
 		$.getJSON("/obtenerPartidas",function(lista){
 			console.log(lista);
 			iu.mostrarListaDePartidas(lista);
