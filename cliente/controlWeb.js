@@ -58,7 +58,9 @@ function ControlWeb(){
         $('#crearPartida').append(cadena);
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
-			rest.crearPartida();
+			$('#mLP').remove();
+			//rest.crearPartida();
+			cws.crearPartida();
 		});
 	}
 	this.mostrarCodigo=function(codigo){
@@ -85,7 +87,7 @@ function ControlWeb(){
 		
 		cadena=cadena+'<ul class="list-group">';
 		for(i=0;i<lista.length;i++){
-		  cadena = cadena+'<p>Código de partida: '+lista[i].codigo+' Nick propietario: '+lista[i].owner+'</p>';
+			cadena = cadena+'<li class="list-group-item"><a href="#" value="'+lista[i].codigo+'"> Nick propietario: '+lista[i].owner+'</a></li>';
 		}
 		cadena=cadena+"</ul>";
 
@@ -95,11 +97,11 @@ function ControlWeb(){
 
 		$(".list-group a").click(function(){
 	        codigo=$(this).attr("value");
-   	        console.log(codigo);
 	        if (codigo){
 	            $('#mLP').remove();
 	            $('#mCP').remove();
-	            rest.unirseAPartida(codigo);
+	            //rest.unirseAPartida(codigo);
+				cws.unirseAPartida(codigo);
 	        }
 	    });		
 	    $("#btnAL").on("click",function(e){		

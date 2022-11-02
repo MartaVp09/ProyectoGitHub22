@@ -9,6 +9,7 @@ function ClienteRest(){
 				console.log("Usuario "+data.nick+" registrado")
 				cli.nick=data.nick;
 				$.cookie("nick",data.nick);
+				cws.conectar();
 				iu.mostrarHome();
 			}
 			else{
@@ -22,7 +23,6 @@ function ClienteRest(){
 		let cli=this;
 		let nick=cli.nick;
 		$.getJSON("/crearPartida/"+nick,function(data){
-			console.log(data);
 			if (data.codigo!=-1){
 				console.log("Usuario "+nick+" crea partida codigo: "+data.codigo)
 				iu.mostrarCodigo(data.codigo);
@@ -62,14 +62,12 @@ function ClienteRest(){
 	this.obtenerListaPartidas=function(){
 		let cli=this;
 		$.getJSON("/obtenerPartidas",function(lista){
-			console.log(lista);
 			iu.mostrarListaDePartidas(lista);
 		});
 	}
 	this.obtenerListaPartidasDisponibles=function(){
 		let cli=this;
 		$.getJSON("/obtenerPartidasDisponibles",function(lista){
-			console.log(lista);
 			iu.mostrarListaDePartidasDisponibles(lista);
 		});
 	}

@@ -20,6 +20,15 @@ function Juego(){
 		delete this.partidas[index];	
 	}
 
+	this.obtenerPartida=function(codigo){
+		for (let key in this.partidas){
+			if(this.partidas[key].codigo==codigo){
+				return this.partidas[key];
+			}
+		}
+        
+    }
+
 	this.jugadorCreaPartida=function(nick){
 		let usr = this.usuarios[nick];  //juego.obtenerUsuario(nick)
 		let res = {"codigo":-1};
@@ -119,7 +128,8 @@ function Partida(codigo, user){
 		let res=this.codigo;
 		if (this.hayHueco()){
 			this.jugadores.push(usr);
-			console.log("El usuario "+usr.nick+" se une a la partida "+this.codigo)
+			console.log("El usuario "+usr.nick+" se une a la partida "+this.codigo);
+			this.comprobarFase();
 		}
 		else{
 			res=-1;
@@ -128,9 +138,13 @@ function Partida(codigo, user){
 		return res;
 	}
 
+	this.esJugando=function(){
+        return this.fase=="jugando";
+    }
+
 	this.comprobarFase=function(){
 		if(!this.hayHueco()){
-			this.fase='jugando';
+			this.fase="jugando";
 		}
 	}
 	
