@@ -38,6 +38,18 @@ function ServidorWS() {
                     console.log("Si juega");
 			  	}
             })
+
+            //###### NUEVO #######
+            socket.on("colocarBarcos",function(nick, nombre, x, y){
+                juego.colocarBarcos(nick, nombre, x, y);
+                cli.enviarAlRemitente(socket,"barcosColocados",{});	
+            })
+            socket.on("barcosDesplegados",function(nick){
+                juego.colocarBarcos(nick, nombre, x, y);
+            })
+            socket.on("disparar",function(nick, x, y){
+                juego.disparar(nick, x, y);	
+            })
         });
     }
 }

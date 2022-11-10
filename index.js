@@ -39,7 +39,6 @@ app.get("/crearPartida/:nick", function (request, response) {
 
 app.get("/unirseAPartida/:nick/:codigo", function (request, response) {
 	let codigo = request.params.codigo;
-	console.log("Holaa: "+codigo);
 	let nick = request.params.nick;
 
 	let res = juego.jugadorSeUneAPartida(nick, codigo);
@@ -49,7 +48,6 @@ app.get("/unirseAPartida/:nick/:codigo", function (request, response) {
 
 app.get("/salir/:nick", function (request, response) {
 	let nick = request.params.nick;
-
 	let res = juego.salir(nick);
 
 	response.send(res);
