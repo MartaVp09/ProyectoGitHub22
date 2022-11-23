@@ -13,7 +13,9 @@ function ControlWeb(){
         cadena=cadena+'<div id="nota"></div>';
         cadena=cadena+'</div></div></div>';
 
-		$("#agregarUsuario").append(cadena);        
+		$('#grid human-player').hide();
+		$('#mH').remove();
+		$("#agregarUsuario").append(cadena);     
 
 		$("#btnAU").on("click",function(e){
 			if ($('#usr').val() === '' || $('#usr').val().length>6) {
@@ -34,11 +36,15 @@ function ControlWeb(){
 		cadena=cadena+'<div class="col">';
 		cadena=cadena+"<h2>Bienvenido "+rest.nick+"!</h2>";
 		cadena=cadena+"<div id='codigo'></div>"
+		cadena=cadena+"<div id='abandonar'></div>"
 		cadena=cadena+'<button id="btnSalir" class="btn btn-primary mb-2 mr-sm-2" style="margin-top:10px">Salir</button>';
 		cadena=cadena+"</div></div>";
+
 		$('#agregarUsuario').append(cadena);
+
 		this.mostrarCrearPartida();
 		rest.obtenerListaPartidasDisponibles();
+
 		$("#btnSalir").on("click",function(e){		
 			$("#mCP").remove();
 			$('#mLP').remove();
@@ -55,29 +61,32 @@ function ControlWeb(){
         cadena=cadena+'<button id="btnCP" class="btn btn-primary mb-2 mr-sm-2">Crear partida</button>';
         cadena=cadena+'</div>';
         cadena=cadena+'</div>';
+
         $('#crearPartida').append(cadena);
+
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
 			$('#mLP').remove();
-			//rest.crearPartida();
+			iu.mostrarAbandonarPartida();
 			cws.crearPartida();
 		});
 	}
 	this.mostrarCodigo=function(codigo){
 		let cadena="Código de la partida: "+codigo;
+
 		$('#codigo').append(cadena);
 	}
-	this.mostrarListaDePartidas=function(lista){
-		$('#mLP').remove();
-		let cadena="<div id='mLP'>";		
-		cadena=cadena+'<ul class="list-group">';
-		for(i=0;i<lista.length;i++){
-		  cadena = cadena+'<p>Código de partida: '+lista[i].codigo+' Nick propietario: '+lista[i].owner+'</p>';
-		}
-		cadena=cadena+"</ul>";
-		cadena=cadena+"</div>"
-		$('#listaPartidas').append(cadena);
+	this.mostrarAbandonarPartida=function(){
+		let cadena='<button id="btnAbandonar" class="btn btn-primary mb-2 mr-sm-2" style="margin-top:10px">Abandonar partida</button>';
+
+		$('#abandonar').append(cadena);
 		
+		$("#btnAbandonar").on("click",function(e){		
+			$('#codigo').remove();
+			$('#mH').remove();
+			iu.mostrarHome();
+			cws.abandonarPartida();
+		});
 	}
 	this.mostrarListaDePartidasDisponibles=function(lista){
 		$('#mLP').remove();
@@ -93,6 +102,7 @@ function ControlWeb(){
 
 		cadena=cadena+'<button id="btnAL" class="btn btn-primary mb-2 mr-sm-2" style="margin-top:10px">Actualizar</button>';
 		cadena=cadena+"</div></div>"
+
 		$('#listaPartidas').append(cadena);
 
 		$(".list-group a").click(function(){
@@ -100,7 +110,6 @@ function ControlWeb(){
 	        if (codigo){
 	            $('#mLP').remove();
 	            $('#mCP').remove();
-	            //rest.unirseAPartida(codigo);
 				cws.unirseAPartida(codigo);
 	        }
 	    });		
@@ -108,19 +117,33 @@ function ControlWeb(){
 			rest.obtenerListaPartidasDisponibles();
 		})
 	}
+
 	this.comprobarCookie=function(){
 		if ($.cookie("nick")){
 			rest.nick=$.cookie("nick");
-			this.mostrarHome();
+			rest.comprobarUsuario();
 		}
 		else{
 			this.mostrarAgregarUsuario();
 		}
 	}
+
 	this.mostrarModal=function(msg){
 		$('#mM').remove();
 		var cadena="<p id='mM'>"+msg+"</p>";
 		$('#contenidoModal').append(cadena);
 		$('#miModal').modal("show");
+	}
+
+	this.finPartida = function(){
+		$('#codigo').remove();
+		$('#abandonar').remove();
+		$('#btnCP').remove();
+		$('#mLP').remove();
+		$('#mH').remove();
+
+		$.removeCookie("nick");
+		iu.comprobarCookie();
+		rest.salir();
 	}
 }

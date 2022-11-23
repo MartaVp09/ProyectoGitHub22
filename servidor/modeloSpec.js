@@ -78,6 +78,7 @@ describe("El juego...", function () {
 
 		it("Comprobar el cambio de turno", function () {
 			user1.disparar(3, 0);	//Agua -> Cambio de turno
+			
 			expect(partida.turno.nick).toEqual(user2.nick);
 		});
 
