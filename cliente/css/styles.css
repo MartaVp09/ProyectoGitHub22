@@ -81,8 +81,7 @@ button {
 
 .container {
 	width: 870px;
-	text-align: center;
-	margin: 20px auto 100px auto;
+	margin: 15px auto 100px auto;
 }
 .game-container {
 	position: relative;
@@ -153,6 +152,7 @@ button {
 .grid-container {
 	width: 430px;
 	display: inline-block;
+	margin: 10px;
 }
 .grid-container h2 {
 	width: 430px;

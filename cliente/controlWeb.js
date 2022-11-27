@@ -15,7 +15,8 @@ function ControlWeb(){
 
 		$('#grid human-player').hide();
 		$('#mH').remove();
-		$("#agregarUsuario").append(cadena);     
+		$("#agregarUsuario").append(cadena);    
+		document.getElementById("tableros").style.visibility = "hidden"; 
 
 		$("#btnAU").on("click",function(e){
 			if ($('#usr').val() === '' || $('#usr').val().length>6) {
@@ -41,6 +42,7 @@ function ControlWeb(){
 		cadena=cadena+"</div></div>";
 
 		$('#agregarUsuario').append(cadena);
+		document.getElementById("tableros").style.visibility = "hidden";
 
 		this.mostrarCrearPartida();
 		rest.obtenerListaPartidasDisponibles();
@@ -63,6 +65,7 @@ function ControlWeb(){
         cadena=cadena+'</div>';
 
         $('#crearPartida').append(cadena);
+		document.getElementById("tableros").style.visibility = "hidden";
 
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
@@ -75,6 +78,7 @@ function ControlWeb(){
 		let cadena="Código de la partida: "+codigo;
 
 		$('#codigo').append(cadena);
+		document.getElementById("tableros").style.visibility = "visible";
 	}
 	this.mostrarAbandonarPartida=function(){
 		let cadena='<button id="btnAbandonar" class="btn btn-primary mb-2 mr-sm-2" style="margin-top:10px">Abandonar partida</button>';

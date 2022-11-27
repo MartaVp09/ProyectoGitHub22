@@ -5,6 +5,7 @@ function ServidorWS() {
     }
     //Se envia un mensaje a los usuarios que están en esa partida
     this.enviarATodosEnPartida=function(io,codigo,mensaje,datos){
+        console.log(datos);
         io.sockets.in(codigo).emit(mensaje,datos);
     }
     this.enviarATodos=function(socket,mens,datos){
@@ -34,10 +35,9 @@ function ServidorWS() {
 			  	let partida=juego.obtenerPartida(codigo);
                 let user = juego.obtenerUsuario(nick)
                 let flota = user.obtenerFlota();
-                res.flota = flota;
-                console.log(res);
+                console.log(flota);
                 if(partida.esDesplegando()){
-                    cli.enviarATodosEnPartida(io,codigoStr,"faseDesplegando",res);
+                    cli.enviarATodosEnPartida(io,codigoStr,"faseDesplegando",{"b2":flota['b2'],"b4":flota['b4']});
                 }
             })
 
@@ -52,7 +52,7 @@ function ServidorWS() {
                 let us = juego.obtenerUsuario(nick)
                 if(us && us.partida){
                     us.colocarBarco(nombre,x,y);
-                    cli.enviarAlRemitente(socket,"barcosColocados",{"nick": nick, "x":x, "y":y, "colocado":true});	
+                    cli.enviarAlRemitente(socket,"barcosColocados",{"nick": nick, "x":x, "y":y, "colocado":true, "nombre":nombre});	
                 }
             })
             socket.on("barcosDesplegados",function(nick){
@@ -61,7 +61,6 @@ function ServidorWS() {
                 if(user.partida){
                     let codigoStr = user.partida.codigo.toString()
                     if(user.partida.flotasDesplegadas()){
-                        
                         cli.enviarATodosEnPartida(io,codigoStr,"barcosDesplegados",res)
                     }else{
                         cli.enviarAlRemitente(socket,"esperandoRival",res)

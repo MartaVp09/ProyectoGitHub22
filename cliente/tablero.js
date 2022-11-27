@@ -46,15 +46,15 @@ function Tablero() {
         //return true;
     }
 
-    this.puedesColocarBarco=function(barco){  //nombre, x, y, colocado
+    this.puedesColocarBarco=function(barco, x, y){  //nombre, x, y, colocado
         //obtener el barco a partir del nombre
         //un bucle del tamaño del barco que marque las celdas
         console.log(barco);
         for(i=0;i<barco.tam;i++){
             this.updateCell(x+i, y, "ship", "human-player")
         }
-        this,this.placingOnGrid=false;
-        this.endPlacing();
+        this.placingOnGrid=false;
+        this.endPlacing(barco.nombre);
 
     }
 
@@ -146,7 +146,7 @@ function Tablero() {
         document.querySelector('.' + player + ' .grid-cell-' + x + '-' + y).setAttribute('class', classes.join(' '));
     };
 
-    endPlacing = function(shipType) {
+    this.endPlacing = function(shipType) {
         document.getElementById(shipType).setAttribute('class', 'placed');
         
         // Mark the ship as 'used'

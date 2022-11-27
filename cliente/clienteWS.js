@@ -65,7 +65,7 @@ function ClienteWS() {
             iu.mostrarModal("Barco colocado!");
             if(res.colocado){
                 let barco = tablero.flota[res.nombre];
-                tablero.puedesColocarBarco(barco);
+                tablero.puedesColocarBarco(barco, res.x, res.y);
             }else{
                 iu.mostrarModal("No se puede colocar barco")
             }
@@ -92,7 +92,7 @@ function ClienteWS() {
 
         this.socket.on("faseDesplegando", function (res) {
             console.log(res);
-            console.log("holaaa"+res.flota)
+            tablero.flota=res;
         })
 
         this.socket.on("finPartida", function(res){
