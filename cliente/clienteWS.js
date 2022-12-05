@@ -62,27 +62,44 @@ function ClienteWS() {
         });
         
         this.socket.on("barcosColocados", function (res) {
-            iu.mostrarModal("Barco colocado!");
+            //iu.mostrarModal("Barco colocado!");
             if(res.colocado){
                 let barco = tablero.flota[res.nombre];
                 tablero.puedesColocarBarco(barco, res.x, res.y);
+                cli.barcosDesplegados();
             }else{
                 iu.mostrarModal("No se puede colocar barco")
             }
         })
 
-        this.socket.on("barcosDesplegados", function (rest) {
+        this.socket.on("aJugar", function (rest) {
             let mensaje = "Flotas desplegadas y turno asignado! A disparaar!";  
             iu.mostrarModal(mensaje);
         })
 
-        this.socket.on("esperandoRival", function (rest) {
-            iu.mostrarModal(rest);
+        this.socket.on("esperandoRival", function (res) {
+            let mensaje = "Aún no puedes colocar barcos! Esperando rival...";  
+            iu.mostrarModal(mensaje);
         })
 
         this.socket.on("disparar", function (res) {
-            let mensaje = "Disparo: "+res.disparo+ " Acción: "+res.estado+" Turno de: "+res.turno; 
+            let accion;
+            
+            if(res.estado=="agua"){
+                accion="¡Aguuua!";
+            }else if(res.estado=="tocado"){
+                accion="¡Tooocadoo!";
+            }else {
+                accion="¡Huuundido";
+            }
+
+            let mensaje = "Disparo: "+res.disparo+ " Acción: "+accion+" Turno de: "+res.turno; 
             iu.mostrarModal(mensaje);
+            if(res.turnoAnterior==rest.nick){
+                tablero.puedesDisparar( res.disparo[1], res.disparo[3], res.estado, "computer-player");
+            }else{
+                tablero.puedesDisparar( res.disparo[1], res.disparo[3], res.estado, "human-player");
+            }
         })
 
         this.socket.on("noEsTuTurno", function (res) {
@@ -91,8 +108,11 @@ function ClienteWS() {
         })
 
         this.socket.on("faseDesplegando", function (res) {
-            console.log(res);
             tablero.flota=res;
+            tablero.elementosGrid();
+            tablero.mostrarFlota();
+            let mensaje = "Ya puedes desplegar tus barcos!";  
+            iu.mostrarModal(mensaje);
         })
 
         this.socket.on("finPartida", function(res){

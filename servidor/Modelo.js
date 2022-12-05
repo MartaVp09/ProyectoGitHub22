@@ -1,6 +1,10 @@
-function Juego() {
+let cad = require('./cad.js');
+
+function Juego(test) {
 	this.partidas = [];
 	this.usuarios = {};  //array asociativo [clave][objeto]
+	this.cad = new cad.Cad();
+	this.test = test;
 
 	this.agregarUsuario = function (nick) {
 		let res = { "nick": -1 };
@@ -47,6 +51,9 @@ function Juego() {
 		//crear partida con propietario nick
 		//devolver el código
 		let codigo = Date.now();
+		this.insertarLog({ "operacion": "crearPartida", "propietario": user.nick, "fecha": Date() }, function () {
+			console.log("Registro de log insertado");
+		});
 		this.partidas[codigo] = new Partida(codigo, user);
 		return codigo;
 	}
@@ -55,6 +62,7 @@ function Juego() {
 		let res = -1;
 		if (this.partidas[codigo]) {
 			res = this.partidas[codigo].agregarJugador(user);
+
 		} else {
 			console.log("La partida no existe");
 		}
@@ -86,7 +94,7 @@ function Juego() {
 	}
 
 	this.obtenerPartidas = function () {
-	
+
 		let lista = [];
 		for (let key in this.partidas) {
 			lista.push({ "codigo": key, "owner": this.partidas[key].owner.nick });
@@ -103,6 +111,22 @@ function Juego() {
 			}
 		}
 		return lista;
+	}
+
+	this.insertarLog = function (log, callback) {
+		if (!this.test) {
+			this.cad.insertarLog(log, callback)
+		}
+	}
+
+	this.obtenerLogs = function (callback) {
+		this.cad.obtenerLogs(callback)
+	}
+
+	if (!test) {
+		this.cad.conectar(function (db) {
+			console.log("Conectado con Atlas");
+		})
 	}
 }
 
@@ -126,17 +150,18 @@ function Usuario(nick, juego) {
 		this.tableroRival = new Tablero(dim);
 	}
 	this.inicializarFlota = function () {
-		//this.flota.push(new Barco("b2",2));
-		//this.flota.push(new Barco("b4",4));
+
 		this.flota["b2"] = new Barco("b2", 2);
+		this.flota["b3"] = new Barco("b3", 3);
 		this.flota["b4"] = new Barco("b4", 4);
+		this.flota["b5"] = new Barco("b5", 5);
 		//otros barcos; 1, 2, 3, ...
 	}
 	this.colocarBarco = function (nombre, x, y) {
 		//comprobar fase (¿En que fase puedo colocar barcos?-->Desplegando)
 		if (this.partida && this.partida.fase == "desplegando") {
 			let barco = this.flota[nombre];
-			this.tableroPropio.colocarBarco(barco, x, y);
+			return this.tableroPropio.colocarBarco(barco, x, y);
 		}
 		// coloca el barco de nombre en la casilla x,y del tablero propio
 
@@ -165,6 +190,9 @@ function Usuario(nick, juego) {
 	this.obtenerEstado = function (x, y) {
 		return this.tableroPropio.obtenerEstado(x, y);
 	}
+	this.obtenerEstadoMarcado = function (x, y) {
+		return this.tableroRival.obtenerEstado(x, y);
+	}
 	this.marcarEstado = function (estado, x, y) {
 		this.tableroRival.marcarEstado(estado, x, y);
 		if (estado == "agua") {
@@ -172,7 +200,7 @@ function Usuario(nick, juego) {
 		}
 	}
 
-	this.obtenerFlota = function(){
+	this.obtenerFlota = function () {
 		return this.flota;
 	}
 
@@ -183,6 +211,10 @@ function Usuario(nick, juego) {
 			}
 		}
 		return true
+	}
+
+	this.insertarLog = function (log, callback) {
+		juego.insertarLog(log, callback)
 	}
 }
 
@@ -198,9 +230,14 @@ function Partida(codigo, user) {
 		if (this.hayHueco()) {
 			this.jugadores.push(usr);
 			console.log("El usuario " + usr.nick + " se une a la partida " + this.codigo)
+
+			usr.insertarLog({ "operacion": "usuarioSeUne", "usuario": user.nick, "código": codigo, "fecha": Date() }, function () {
+				console.log("Registro de log insertado");
+			});
+
 			usr.partida = this;
 			console.log("Se asigna partida a user")
-			usr.inicializarTablero(5);
+			usr.inicializarTablero(10);
 			this.comprobarFase();
 			usr.inicializarFlota();
 		}
@@ -247,6 +284,7 @@ function Partida(codigo, user) {
 		if (this.flotasDesplegadas()) {
 			this.fase = "jugando";
 			this.asignarTurnoInicial();
+
 			console.log("Flotas desplegadas y turno asignado")
 			return "Flotas desplegadas y turno asignado, a disparar!!"
 		}
@@ -314,18 +352,24 @@ function Tablero(size) {
 			}
 		}
 	}
+
 	this.colocarBarco = function (barco, x, y) {
 		if (this.casillasLibres(x, y, barco.tam)) {
-			for (i = x; i < barco.tam; i++) {
-				this.casillas[i][y].contiene = barco;
+			for (i = 0; i < barco.tam; i++) {
+				this.casillas[i + x][y].contiene = barco;
 			}
 			barco.desplegado = true;
+			return true;
 		}
+		return false;
 	}
 
 	this.casillasLibres = function (x, y, tam) {
-		for (i = x; i < tam; i++) {
-			let contiene = this.casillas[i][y].contiene;
+		if (x + tam > this.size) {
+			return false;
+		}
+		for (i = 0; i < tam; i++) {
+			let contiene = this.casillas[i + x][y].contiene;
 			if (!contiene.esAgua()) {
 				return false;
 			}
@@ -336,10 +380,10 @@ function Tablero(size) {
 		return this.casillas[x][y].contiene.meDisparan(this, x, y);
 	}
 	this.obtenerEstado = function (x, y) {
-		return this.casillas[x][y].contiene.obtenerEstado();
+		return this.casillas[x][y].contiene.estado;
 	}
 	this.marcarEstado = function (estado, x, y) {
-		this.casillas[x][y].contiene = estado;
+		this.casillas[x][y].contiene.estado = estado;
 	}
 	this.ponerAgua = function (x, y) {
 		this.casillas[x][y].contiene = new Agua();
@@ -393,24 +437,12 @@ function Agua() {
 	}
 	this.meDisparan = function (tablero, x, y) {
 		console.log("Agua");
-		return this.estado;
+		return this.obtenerEstado();
 	}
 	this.obtenerEstado = function () {
 		return "agua";
 	}
 
-}
-
-function Inicial() {
-	this.nombre = "inicial";
-}
-
-function Jugando() {
-	this.nombre = "jugando";
-}
-
-function Desplegando() {
-	this.nombre = "desplegando";
 }
 
 module.exports.Juego = Juego;
