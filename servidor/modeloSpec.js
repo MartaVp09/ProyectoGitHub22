@@ -32,27 +32,29 @@ describe("El juego...", function () {
 		expect(user2.tableroRival).toBeDefined();
 
 
-		expect(user1.tableroPropio.casillas.length).toEqual(5);
-		expect(user2.tableroPropio.casillas.length).toEqual(5);
+		expect(user1.tableroPropio.casillas.length).toEqual(10);
+		expect(user2.tableroPropio.casillas.length).toEqual(10);
 
-		expect(user1.tableroPropio.casillas[0].length).toEqual(5);
-		expect(user1.tableroRival.casillas[0].length).toEqual(5);
-		expect(user2.tableroPropio.casillas[0].length).toEqual(5);
-		expect(user2.tableroRival.casillas[0].length).toEqual(5);
+		expect(user1.tableroPropio.casillas[0].length).toEqual(10);
+		expect(user1.tableroRival.casillas[0].length).toEqual(10);
+		expect(user2.tableroPropio.casillas[0].length).toEqual(10);
+		expect(user2.tableroRival.casillas[0].length).toEqual(10);
 
 		//habría que recorrer todo el tablero
 		expect(user1.tableroPropio.casillas[0][0].contiene.esAgua()).toEqual(true);
 	});
 
-	it("Los dos jugadores tienen flota (2 barcos, tam 2 y 4", function () {
+	it("Los dos jugadores tienen flota (4 barcos, tam 2, 3, 4 y 5", function () {
 		expect(user1.flota).toBeDefined();
 		expect(user2.flota).toBeDefined();
 
-		expect(Object.keys(user1.flota).length).toEqual(2);
-		expect(Object.keys(user2.flota).length).toEqual(2);
+		expect(Object.keys(user1.flota).length).toEqual(4);
+		expect(Object.keys(user2.flota).length).toEqual(4);
 
 		expect(user1.flota["b2"].tam).toEqual(2);
+		expect(user1.flota["b3"].tam).toEqual(3);
 		expect(user1.flota["b4"].tam).toEqual(4);
+		expect(user1.flota["b5"].tam).toEqual(5);
 	});
 
 	it("Comprobamos que la partida está en fase desplegando", function () {
@@ -64,10 +66,14 @@ describe("El juego...", function () {
 
 		beforeEach(function () {
 			user1.colocarBarco("b2", 0, 0); // [0 0] [1 0]
-			user1.colocarBarco("b4", 0, 1); // [0 1] [1 1] [2 1] [3 1]
+			user1.colocarBarco("b3", 0, 1); // [0 1] [1 1] [2 1]
+			user1.colocarBarco("b4", 0, 2); // [0 2] [1 2] [2 2] [3 2]
+			user1.colocarBarco("b5", 0, 3); // [0 3] [1 3] [2 3] [3 3] [4 3]
 			user1.barcosDesplegados();
 			user2.colocarBarco("b2", 0, 0);
-			user2.colocarBarco("b4", 0, 1);
+			user2.colocarBarco("b3", 0, 1); 
+			user2.colocarBarco("b4", 0, 2);
+			user2.colocarBarco("b5", 0, 3);
 			user2.barcosDesplegados();
 		});
 
@@ -88,8 +94,18 @@ describe("El juego...", function () {
 
 			user1.disparar(0, 1);	//Tocado
 			user1.disparar(1, 1);	//Tocado
-			user1.disparar(2, 1);	//Tocado
-			user1.disparar(3, 1);	//Hundido
+			user1.disparar(2, 1);	//Hundido
+
+			user1.disparar(0, 2);	//Tocado
+			user1.disparar(1, 2);	//Tocado
+			user1.disparar(2, 2);	//Tocado
+			user1.disparar(3, 2);	//Hundido
+
+			user1.disparar(0, 3);	//Tocado
+			user1.disparar(1, 3);	//Tocado
+			user1.disparar(2, 3);	//Tocado
+			user1.disparar(3, 3);	//Tocado
+			user1.disparar(4, 3);	//Hundido
 
 			expect(partida.esFinal()).toEqual(true);
 			expect(partida.turno.nick).toEqual(user1.nick);
