@@ -6,8 +6,8 @@ function ControlWeb() {
 		cadena=cadena+'<h1 class="text-white">Batalla Naval</h1>';
 		cadena=cadena+'<p style="color:white">La batalla naval es un juego tradicional de estrategia y algo de suerte, que involucra a dos participantes.</p>';
 		cadena=cadena+'</div>';
-		//cadena=cadena+'<input type="text" class="form-control mb-2 mr-sm-2" id="usr" placeholder="Introduce tu nick (max 6 letras)" required></input>';
-		//cadena=cadena+'<button id="btnAU" class="btn btn-primary mb-2 mr-sm-2">Iniciar sesión</button>';
+		cadena=cadena+'<input type="text" class="form-control mb-2 mr-sm-2" id="usr" placeholder="Introduce tu nick (max 6 letras)" required></input>';
+		cadena=cadena+'<button id="btnAU" class="btn btn-primary mb-2 mr-sm-2">Iniciar sesión</button>';
 		cadena=cadena+'<a href="/auth/google" class="btn btn-primary mb-2 mr-sm-2">Accede con Google</a>';
 		cadena=cadena+'<div><center><img class="card-img-bottom" src="cliente/img/batallaNaval.webp" style="width:50% "></img></center></div>';
 		cadena=cadena+'<div id="nota"></div>';

@@ -3,6 +3,7 @@ function Tablero() {
     this.placingOnGrid = false;
     this.nombreBarco = undefined;
     this.flota;
+    this.orientacion = "horizontal";
 
     this.init = function () {
         //inicilizar los manejadores
@@ -17,9 +18,34 @@ function Tablero() {
             computerCells[j].self = this;
             computerCells[j].addEventListener('click', this.shootListener, false);
         }
+
     }
 
-    this.asignarFlotaListener=function(){
+    this.orientacionListener = function (e) {
+        console.log("La orientación ha cambiado!")
+        self = e.target.self;
+        self.cambiarOrientacion();
+    };
+
+    this.cambiarOrientacion = () => {
+        if (self.orientacion = "horizontal") {
+            this.orientacion = "vertical";
+            console.log("Orientación cambia a vertical");
+        } else {
+            this.orientacion = "horizontal";
+            console.log("Orientación cambia a horizontal");
+        }
+        console.log("Orientación: "+this.orientacion);
+    }
+
+    this.asignarOrientacionListener = function () {
+        console.log("Entra en el listener!");
+        var botonVoltear = document.querySelector("#btnV");
+        botonVoltear.self = this;
+        botonVoltear.addEventListener('click', this.orientacionListener, false);
+    }
+
+    this.asignarFlotaListener = function () {
         var playerRoster = document.querySelector('.fleet-roster').querySelectorAll('li');
         for (var i = 0; i < playerRoster.length; i++) {
             playerRoster[i].self = this;
@@ -34,6 +60,7 @@ function Tablero() {
             var x = parseInt(e.target.getAttribute('data-x'), 10);
             var y = parseInt(e.target.getAttribute('data-y'), 10);
             self.colocarBarco(self.nombreBarco, x, y);
+            self.nombreBarco = undefined;
         }
     };
 
@@ -59,13 +86,19 @@ function Tablero() {
     };
 
     this.colocarBarco = function (nombre, x, y) {
-        console.log("Barco: " + nombre + " X: " + x + " Y: " + y);
-        cws.colocarBarco(nombre, x, y);
+        console.log("Barco: " + nombre + " X: " + x + " Y: " + y +" Orientación: "+ this.orientacion);
+        cws.colocarBarco(nombre, x, y, this.orientacion);
     }
 
-    this.puedesColocarBarco = function (barco, x, y) {  
-        for (i = 0; i < barco.tam; i++) {
-            this.updateCell(x + i, y, "ship", "human-player")
+    this.puedesColocarBarco = function (barco, x, y) {
+        if (this.orientacion == "horizontal") {
+            for (i = 0; i < barco.tam; i++) {
+                this.updateCell(x + i, y, "ship", "human-player");
+            }
+        } else {
+            for (i = 0; i < barco.tam; i++) {
+                this.updateCell(x, y + i, "ship", "human-player")
+            }
         }
         this.endPlacing(barco.nombre);
     }
@@ -108,7 +141,7 @@ function Tablero() {
 
     this.elementosGrid = function () {
         $('#gc').remove();
-        let cadena='<div class="game-container" id="gc">';
+        let cadena = '<div class="game-container" id="gc">';
         cadena = cadena + '<div class="row">';
         cadena = cadena + '<div class="col-4">';
         cadena = cadena + '<h2>Barcos</h2>';
@@ -133,8 +166,11 @@ function Tablero() {
             cadena = cadena + "<li id='" + key + "'>" + key + "</li>"
         }
         cadena = cadena + "</ul>";
+        cadena = cadena + "<button id='btnV' class='btn btn-primary mb-2 mr-sm-2'>Voltear</button>";
         $('#flota').append(cadena);
+
         this.asignarFlotaListener();
+        this.asignarOrientacionListener();
     }
 
     this.puedesDisparar = function (x, y, estado, targetPlayer) {

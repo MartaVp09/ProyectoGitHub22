@@ -19,8 +19,8 @@ function ClienteWS() {
     this.salir=function(){
         this.socket.emit("salir", rest.nick);
     }
-    this.colocarBarco=function(nombre,x,y){
-        this.socket.emit("colocarBarco", rest.nick, nombre, x, y);
+    this.colocarBarco=function(nombre,x,y, orientacion){
+        this.socket.emit("colocarBarco", rest.nick, nombre, x, y, orientacion);
     }
     this.barcosDesplegados=function() {
         this.socket.emit("barcosDesplegados", rest.nick);
@@ -74,11 +74,6 @@ function ClienteWS() {
 
         this.socket.on("aJugar", function (rest) {
             let mensaje = "Flotas desplegadas y turno asignado! A disparaar!";  
-            iu.mostrarModal(mensaje);
-        })
-
-        this.socket.on("esperandoRival", function (res) {
-            let mensaje = "Aún no puedes colocar barcos! Esperando rival...";  
             iu.mostrarModal(mensaje);
         })
 

@@ -157,13 +157,12 @@ function Usuario(nick, juego) {
 		this.flota["b5"] = new Barco("b5", 5);
 		//otros barcos; 1, 2, 3, ...
 	}
-	this.colocarBarco = function (nombre, x, y) {
-		//comprobar fase (¿En que fase puedo colocar barcos?-->Desplegando)
-		if (this.partida && this.partida.fase == "desplegando") {
+	this.colocarBarco = function (nombre, x, y, orientacion) {
+
+		if (this.partida && nombre && this.partida.fase == "desplegando") {
 			let barco = this.flota[nombre];
-			return this.tableroPropio.colocarBarco(barco, x, y);
+			return this.tableroPropio.colocarBarco(barco, x, y, orientacion);
 		}
-		// coloca el barco de nombre en la casilla x,y del tablero propio
 
 	}
 
@@ -353,18 +352,16 @@ function Tablero(size) {
 		}
 	}
 
-	this.colocarBarco = function (barco, x, y) {
-		if (this.casillasLibres(x, y, barco.tam)) {
-			for (i = 0; i < barco.tam; i++) {
-				this.casillas[i + x][y].contiene = barco;
-			}
-			barco.desplegado = true;
-			return true;
+	this.colocarBarco = function (barco, x, y, orientacion) {
+		if (orientacion == "horizontal") {
+			barco.orientacion = new Horizontal();
+		} else {
+			barco.orientacion = new Vertical();
 		}
-		return false;
+		return barco.orientacion.colocarBarco(barco, this, x, y);
 	}
 
-	this.casillasLibres = function (x, y, tam) {
+	this.casillasLibresH = function (x, y, tam) {
 		if (x + tam > this.size) {
 			return false;
 		}
@@ -376,6 +373,20 @@ function Tablero(size) {
 		}
 		return true;
 	}
+
+	this.casillasLibresV = function (x, y, tam) {
+		if (y + tam > this.size) {
+			return false;
+		}
+		for (i = 0; i < tam; i++) {
+			let contiene = this.casillas[x][i + y].contiene;
+			if (!contiene.esAgua()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	this.meDisparan = function (x, y) {
 		return this.casillas[x][y].contiene.meDisparan(this, x, y);
 	}
@@ -443,6 +454,32 @@ function Agua() {
 		return "agua";
 	}
 
+}
+
+function Horizontal() {
+	this.colocarBarco = function (barco, tablero, x, y) {
+		if (tablero.casillasLibresH(x, y, barco.tam)) {
+			for (i = 0; i < barco.tam; i++) {
+				tablero.casillas[i + x][y].contiene = barco;
+			}
+			barco.desplegado = true;
+			return true;
+		}
+		return false;
+	}
+}
+
+function Vertical() {
+	this.colocarBarco = function (barco, tablero, x, y) {
+		if (tablero.casillasLibresV(x, y, barco.tam)) {
+			for (i = 0; i < barco.tam; i++) {
+				tablero.casillas[x][i + y].contiene = barco;
+			}
+			barco.desplegado = true;
+			return true;
+		}
+		return false;
+	}
 }
 
 module.exports.Juego = Juego;

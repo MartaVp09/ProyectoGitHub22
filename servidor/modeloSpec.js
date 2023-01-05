@@ -65,15 +65,16 @@ describe("El juego...", function () {
 	describe("A jugar", function () {
 
 		beforeEach(function () {
-			user1.colocarBarco("b2", 0, 0); // [0 0] [1 0]
-			user1.colocarBarco("b3", 0, 1); // [0 1] [1 1] [2 1]
-			user1.colocarBarco("b4", 0, 2); // [0 2] [1 2] [2 2] [3 2]
-			user1.colocarBarco("b5", 0, 3); // [0 3] [1 3] [2 3] [3 3] [4 3]
+			let ori = "horizontal";
+			user1.colocarBarco("b2", 0, 0, ori); // [0 0] [1 0]
+			user1.colocarBarco("b3", 0, 1, ori); // [0 1] [1 1] [2 1]
+			user1.colocarBarco("b4", 0, 2, ori); // [0 2] [1 2] [2 2] [3 2]
+			user1.colocarBarco("b5", 0, 3, ori); // [0 3] [1 3] [2 3] [3 3] [4 3]
 			user1.barcosDesplegados();
-			user2.colocarBarco("b2", 0, 0);
-			user2.colocarBarco("b3", 0, 1); 
-			user2.colocarBarco("b4", 0, 2);
-			user2.colocarBarco("b5", 0, 3);
+			user2.colocarBarco("b2", 0, 0, ori);
+			user2.colocarBarco("b3", 0, 1, ori); 
+			user2.colocarBarco("b4", 0, 2, ori);
+			user2.colocarBarco("b5", 0, 3, ori);
 			user2.barcosDesplegados();
 		});
 
