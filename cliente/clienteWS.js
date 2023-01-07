@@ -14,7 +14,7 @@ function ClienteWS() {
         this.socket.emit("unirseAPartida", rest.nick, codigo);
     }
     this.abandonarPartida=function(){
-		this.socket.emit("abandonarPartida",rest.nick,cws.codigo);
+		this.socket.emit("abandonarPartida", rest.nick, cws.codigo);
 	}
     this.salir=function(){
         this.socket.emit("salir", rest.nick);
@@ -36,7 +36,10 @@ function ClienteWS() {
             if (data.codigo != -1) {
                 console.log("El usuario " + rest.nick + " crea la partida: " + data.codigo);
                 iu.mostrarCodigo(data.codigo);
-                cli.codigo=data.codigo;
+                iu.mostrarGif();
+                cli.codigo=data.codigo;  
+                $.cookie("codigo", cli.codigo);
+
             } else {
                 console.log("No se ha podido crear partida");
 				iu.mostrarModal("No se ha podido crear partida");
@@ -50,9 +53,23 @@ function ClienteWS() {
                 iu.mostrarCodigo(data.codigo);
                 iu.mostrarAbandonarPartida();
                 cli.codigo = data.codigo;
+                $.cookie("nick", nick);
+                $.cookie("codigo", codigo);
             } else {
                 console.log("El usuario " + rest.nick + " no se ha podido unir a la partida: " + data.codigo);
             }
+        });
+
+        this.socket.on("partidaEliminada", function (data) {
+            iu.mostrarModal("La partida ha sido eliminada, un jugador ha abandonado!");
+            $.removeCookie("codigo");
+            iu.mostrarHome();
+        });
+
+        this.socket.on("usuarioEliminado", function (data) {
+            $.removeCookie("nick");
+            cli.codigo = undefined;
+            iu.mostrarAgregarUsuario();
         });
 
         this.socket.on("actualizarListaPartidas", function (lista) {
@@ -106,6 +123,7 @@ function ClienteWS() {
             tablero.flota=res;
             tablero.elementosGrid();
             tablero.mostrarFlota();
+            iu.ocultarGif();
             let mensaje = "Ya puedes desplegar tus barcos!";  
             iu.mostrarModal(mensaje);
         })

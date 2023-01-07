@@ -71,12 +71,11 @@ app.get("/unirseAPartida/:nick/:codigo", function (request, response) {
 	response.send(res);
 });
 
-app.get("/salir/:nick", function (request, response) {
-	let nick = request.params.nick;
-	let res = juego.salir(nick);
-
-	response.send(res);
-});
+// app.get("/salir/:nick", function (request, response) {
+// 	let nick = request.params.nick;
+// 	let res = juego.salir(nick);
+// 	response.send(res);
+// });
 
 app.get("/obtenerLogs",function(request,response){
 	juego.obtenerLogs(function(logs){

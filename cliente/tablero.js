@@ -18,7 +18,6 @@ function Tablero() {
             computerCells[j].self = this;
             computerCells[j].addEventListener('click', this.shootListener, false);
         }
-
     }
 
     this.orientacionListener = function (e) {
@@ -28,7 +27,7 @@ function Tablero() {
     };
 
     this.cambiarOrientacion = () => {
-        if (self.orientacion = "horizontal") {
+        if (this.orientacion = "horizontal") {
             this.orientacion = "vertical";
             console.log("Orientación cambia a vertical");
         } else {

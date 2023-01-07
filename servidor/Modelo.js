@@ -15,10 +15,39 @@ function Juego(test) {
 		}
 		return res;
 	}
+
 	this.eliminarUsuario = function (nick) {
+		let partida = this.finalizarPartidasDe(nick);
+
 		delete this.usuarios[nick];
 		console.log("El usuario " + nick + " ha salido del juego.")
+
+		return partida;
 	}
+
+	this.finalizarPartidasDe = function(nick) {
+		let codigoPar = undefined;
+		let partida = false;
+		for (let codigoPartida in this.partidas) {
+			partida = this.finalizarPartida(nick, codigoPartida);
+			if (partida) {
+				codigoPar = codigoPartida; 
+			}
+		}
+		return codigoPar;
+	}
+
+	this.finalizarPartida = function(nick, codigo) {
+		let partida = this.obtenerPartida(codigo);
+
+		if (!partida) return false;
+		if( partida.jugadores.some((i) => i.nick === nick) ) {
+			this.eliminarPartida(codigo);
+			return true;
+		}
+		return false;
+	}
+
 	this.eliminarPartida = function (index) {
 		console.log("Partida " + index + " eliminada.");
 		delete this.partidas[index];
@@ -77,18 +106,6 @@ function Juego(test) {
 		if (usr) {
 			valor = this.unirseAPartida(codigo, usr);
 			res = { "codigo": valor };
-		}
-		return res;
-	}
-
-	this.salir = function (nick) {
-		let res = { "codigo": -1 };
-		this.eliminarUsuario(nick);
-		for (let key in this.partidas) {
-			if (this.partidas[key].owner.nick == nick) {
-				res = { "codigo": this.partidas[key].codigo };
-				this.eliminarPartida(key);
-			}
 		}
 		return res;
 	}

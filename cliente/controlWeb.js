@@ -1,5 +1,26 @@
 function ControlWeb() {
 
+	this.comprobarCookie = function () {
+		let usuario = $.cookie("nick");
+		if (usuario) {
+			rest.nick = usuario;
+			rest.comprobarUsuario(usuario);
+		}
+		else {
+			this.mostrarAgregarUsuario();
+		}
+	}
+
+	this.recuperarPartida = function () {
+		this.mostrarHome();
+		partida = $.cookie("codigo");
+		if (partida) {
+			$('#mLP').remove();
+			$('#mCP').remove();
+			this.mostrarCodigo(partida);
+		}
+	}
+
 	this.mostrarAgregarUsuario = function () {
 		let cadena='<div id="mAU" class="container">';
 		cadena=cadena+'<div class="jumbotron bg-primary">';
@@ -16,7 +37,8 @@ function ControlWeb() {
 		$('#grid human-player').hide();
 		$('#mH').remove();
 		$("#agregarUsuario").append(cadena);
-		document.getElementById("tableros").style.visibility = "hidden";
+		//document.getElementById("tableros").style.visibility = "hidden";
+		$('#gc').remove();
 
 		$("#btnAU").on("click", function (e) {
 			if ($('#usr').val() === '' || $('#usr').val().length > 6) {
@@ -27,7 +49,6 @@ function ControlWeb() {
 				var nick = $('#usr').val();
 				$("#mAU").remove();
 				rest.agregarUsuario(nick);
-				//mostrar gif
 			}
 		})
 	}
@@ -49,7 +70,8 @@ function ControlWeb() {
 		cadena=cadena+'</div></div>';
 
 		$('#agregarUsuario').append(cadena);
-		document.getElementById("tableros").style.visibility = "hidden";
+		//document.getElementById("tableros").style.visibility = "hidden";
+		$('#gc').remove();
 
 		this.mostrarCrearPartida();
 		rest.obtenerListaPartidasDisponibles();
@@ -58,16 +80,16 @@ function ControlWeb() {
 			$("#mCP").remove();
 			$('#mLP').remove();
 			$('#mH').remove();
-			$.removeCookie("nick");
-			iu.comprobarCookie();
-			rest.salir();
+			iu.ocultarGif();
+			cws.salir();
 		});
 	}
 	this.mostrarCrearPartida = function () {
 		let cadena = '<button id="btnCP" class="btn btn-primary mb-2 mr-sm-2">Crear partida</button>';
 	
 		$('#mCP').append(cadena);
-		document.getElementById("tableros").style.visibility = "hidden";
+		//document.getElementById("tableros").style.visibility = "hidden";
+		$('#gc').remove();
 
 		$("#btnCP").on("click", function (e) {
 			$("#mCP").remove();
@@ -75,6 +97,17 @@ function ControlWeb() {
 			iu.mostrarAbandonarPartida();
 			cws.crearPartida();
 		});
+	}
+	
+	this.mostrarGif = function () {
+		let cadena = '<div id="loading" ><center><h1 class="text-blue">Esperando rival...</h1></center>';
+		cadena = cadena + '<center><img src="cliente/img/loading-42.gif" style="width:100% "></img></center></div>';
+
+		$('#gif').append(cadena);
+	}
+
+	this.ocultarGif = function () {
+		$('#loading').remove();
 	}
 
 	this.mostrarCodigo = function (codigo) {
@@ -92,7 +125,10 @@ function ControlWeb() {
 		$("#btnAbandonar").on("click", function (e) {
 			$('#codigo').remove();
 			$('#mH').remove();
+			//document.getElementById("tableros").style.visibility = "hidden";
+			$('#gc').remove();
 			iu.mostrarHome();
+			iu.ocultarGif();
 			cws.abandonarPartida();
 		});
 	}
@@ -121,18 +157,9 @@ function ControlWeb() {
 			}
 		});
 		$("#btnAL").on("click", function (e) {
+			$('#loading').remove();
 			rest.obtenerListaPartidasDisponibles();
 		})
-	}
-
-	this.comprobarCookie = function () {
-		if ($.cookie("nick")) {
-			rest.nick = $.cookie("nick");
-			rest.comprobarUsuario();
-		}
-		else {
-			this.mostrarAgregarUsuario();
-		}
 	}
 
 	this.mostrarModal = function (msg) {
@@ -148,9 +175,10 @@ function ControlWeb() {
 		$('#btnCP').remove();
 		$('#mLP').remove();
 		$('#mH').remove();
+		$('#loading').remove();
 
 		$.removeCookie("nick");
 		iu.comprobarCookie();
-		rest.salir();
+		cws.finPartida();
 	}
 }
